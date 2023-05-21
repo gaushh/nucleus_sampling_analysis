@@ -28,9 +28,9 @@ class ThresholdSampler(Sampler):
         # Create a mask where probabilities are above the threshold
         threshold_mask = probs > self.threshold
 
-        # Apply the mask to the logits, setting those below the threshold to '-inf'
+        # Apply the mask to the logits, setting those below the threshold to a very low value instead of '-inf'
         masked_logits = logits.clone()
-        masked_logits[~threshold_mask] = float('-inf')
+        masked_logits[~threshold_mask] = float('-1e20')  # or any very low value of your preference
 
         # Sample from the sampler
         res = self.sampler(masked_logits)
