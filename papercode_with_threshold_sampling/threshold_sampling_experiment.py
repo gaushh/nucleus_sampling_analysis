@@ -99,26 +99,33 @@ def main():
     model.eval()
 
     # Prompts to use for sampling
-    prompt = 'I saw an interesting dream last night. '
+    # prompt = 'I saw an interesting dream last night. '
+    prompt = 'It was raining and I heard a loud sound.'
 
     # Your new Threshold Sampler experimentation
-    threshold = 0.2
+    threshold = 0.009
     target_perplexity = 12.38
     tolerance = 0.01
     base_sampler = TemperatureSampler(1.0)  # or any other base sampler you prefer
     current_perplexity = 0
+    with monit.section(f'threshold={threshold}'):
+        threshold_sampler = ThresholdSampler(threshold, base_sampler)
+        sample(model, tokenizer, threshold_sampler, 4, 32, 128, prompt)
+        # Calculate the perplexity of generated text. You need to implement this function.
+        current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, prompt)
+        print(threshold, current_perplexity)
 
-    while abs(current_perplexity - target_perplexity) > tolerance:
-        with monit.section(f'threshold={threshold}'):
-            threshold_sampler = ThresholdSampler(threshold, base_sampler)
-            sample(model, tokenizer, threshold_sampler, 4, 32, 128, prompt)
-            # Calculate the perplexity of generated text. You need to implement this function.
-            current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, prompt)
-            print(current_perplexity)
-            if current_perplexity > target_perplexity:
-                threshold -= 0.01
-            else:
-                threshold += 0.01
+    # while abs(current_perplexity - target_perplexity) > tolerance:
+    #     with monit.section(f'threshold={threshold}'):
+    #         threshold_sampler = ThresholdSampler(threshold, base_sampler)
+    #         sample(model, tokenizer, threshold_sampler, 4, 32, 128, prompt)
+    #         # Calculate the perplexity of generated text. You need to implement this function.
+    #         current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, prompt)
+    #         print(threshold, current_perplexity)
+    #         if current_perplexity > target_perplexity:
+    #             threshold -= 0.01
+    #         else:
+    #             threshold += 0.01
 
 if __name__ == '__main__':
     main()

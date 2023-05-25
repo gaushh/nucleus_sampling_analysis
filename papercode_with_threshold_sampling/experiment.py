@@ -105,7 +105,7 @@ def main():
         sample(model, tokenizer, NucleusSampler(0.95, TemperatureSampler(1.)), 4, 32, 128, prompt)
     with monit.section('nucleus p=.1'):
         sample(model, tokenizer, NucleusSampler(0.1, TemperatureSampler(1.)), 4, 32, 128, prompt)
-
+    
 #
 if __name__ == '__main__':
     main()
