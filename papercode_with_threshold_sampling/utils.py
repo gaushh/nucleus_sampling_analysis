@@ -8,6 +8,7 @@ from labml_nn.sampling import Sampler
 from labml_nn.sampling.temperature import TemperatureSampler
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from threshold_sampler import ThresholdSampler
+import json
 
 def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampler: Sampler, prompt: str,
                          n_samples: int = 1, n_tokens: int = 100, seq_len: int = 128):
@@ -44,3 +45,29 @@ def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampl
     perplexity = torch.exp(torch.tensor(avg_neg_log_prob))
 
     return perplexity.item()
+
+def read_data(filename):
+    data = []
+    with open(filename) as f:
+        for line in f:
+            data.append(json.loads(line))
+    
+    puncs = ['.','?','!']
+    prompts = []
+    for data_item in data:
+        indices = []
+        max_ = 40
+        for punc in puncs:
+            indices.append(data_item['text'].find(punc))
+        print(indices)
+        for index in indices:
+            if index <= max_ and index != -1:
+                max_ = index
+        prompts.append(data_item['text'][:max_])
+    
+    return prompts
+    # prompts = []
+    # for data_item in data:
+    #     prompts
+
+# read_data('data/webtext.test.jsonl')
