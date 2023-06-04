@@ -18,7 +18,7 @@ def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampl
     data = torch.tile(torch.tensor(tokenizer.encode(prompt))[None, :], (n_samples, 1))
     total_log_prob = 0.0
     total_tokens = 0
-
+    output_tokens = []
     with torch.no_grad():
         for _ in range(n_tokens):
             # Truncate the data to the maximum sequence length
@@ -29,6 +29,7 @@ def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampl
             logits = logits[:, -1]
             # Sample from the `logits`
             res = sampler(logits)
+            output_tokens.append(res.item())
             ## break if eod token reached
             if 199 == int(res.item()):
                 break
@@ -46,8 +47,8 @@ def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampl
     avg_neg_log_prob = -total_log_prob / total_tokens
     # Perplexity is the exponentiation of the average negative log probability
     perplexity = torch.exp(torch.tensor(avg_neg_log_prob))
-
-    return perplexity.item()
+    output_text = tokenizer.decode(output_tokens)
+    return perplexity.item(), output_text
 
 def read_data(filename):
     data = []

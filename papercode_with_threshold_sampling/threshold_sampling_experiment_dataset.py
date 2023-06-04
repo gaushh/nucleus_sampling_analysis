@@ -7,6 +7,7 @@ import random
 from typing import List
 from utils1 import read_json_file, calculate_perplexity, sample
 import tqdm
+import json
 NEWLINE = 198
 
 def sublist_end_index(list1, list2):
@@ -72,35 +73,48 @@ def moving_threshold(dataset: List[str], num_samples: int = 10):
 
 
 def static_threshold(dataset: List[str]):
+    # threshold_values = np.logspace(-3, -2, 10)  # generates 10 values between 10^-3 and 10^-2
+    threshold_values = [0.009]  # generates 10 values between 10^-3 and 10^-2
+    output_data = []  # create a list to store output text and perplexity for each prompt and threshold
+
     with monit.section('Load tokenizer/model'):
         print("Loading tokenizer and model...")
         tokenizer = GPT2Tokenizer.from_pretrained('gpt2', do_lower_case=True)
         model = GPT2LMHeadModel.from_pretrained('gpt2', cache_dir=lab.get_data_path() / 'cache')
         print("Done loading tokenizer and model...")
     model.eval()
-    threshold = 0.09
-    base_sampler = TemperatureSampler(1.0)
-    perplexities = []
-    min_diff = float('inf')
-    optimal_threshold = threshold
-    rows = dataset
-    # print("length of rows ", len(rows))
-    avg_perplexity = 0
-    threshold_sampler = ThresholdSampler(threshold, base_sampler)
-    for row in tqdm.tqdm(rows[:100]):
-        # print(row,"//")
-        # row = row[:40]  # Ensure prompt length is not more than 40
-        current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, row, 1, 200, 40)
-        perplexities.append(current_perplexity)
-        avg_perplexity += current_perplexity
 
-    avg_perplexity /= len(rows)
-    print(f"Average perplexity: {avg_perplexity}")
-    # Plotting
-    plt.plot(len(rows), perplexities)
-    plt.xlabel('Data Samples')
-    plt.ylabel('Perplexity')
-    plt.title('Perplexity vs. Documents')
+    for threshold in tqdm.tqdm(threshold_values):
+        base_sampler = TemperatureSampler(1.0)
+        threshold_sampler = ThresholdSampler(threshold, base_sampler)
+        avg_perplexity = 0
+        rows = dataset
+        perplexities = []
+        avg_perplexities = []
+
+
+        for row in rows[:100]:
+            current_perplexity, output_text = calculate_perplexity(model, tokenizer, threshold_sampler, row, 1, 200, 40)
+            perplexities.append(current_perplexity)
+            avg_perplexity += current_perplexity
+            output_data.append(
+                {"prompt": row, "output_text": output_text, "perplexity": current_perplexity, "threshold": threshold})
+
+        avg_perplexity /= len(rows)
+        avg_perplexities.append(avg_perplexity)
+
+
+    # Save output_data into a JSON file
+    with open("output_data.json", "w") as file:
+        json.dump(output_data, file, indent=4)
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(threshold_values, avg_perplexities, marker='o')
+    plt.xlabel('Threshold')
+    plt.ylabel('Average Perplexity')
+    plt.title('Average Perplexity vs Threshold')
+    plt.grid(True)
+    plt.savefig("perplexity_vs_threshold.png")
     plt.show()
 
 
