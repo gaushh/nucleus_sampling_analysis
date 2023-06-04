@@ -113,8 +113,7 @@ def main():
         sample(model, tokenizer, threshold_sampler, 4, 32, 128, prompt)
         # Calculate the perplexity of generated text. You need to implement this function.
         current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, prompt)
-        print(threshold, current_perplexity)
-
+        print("threshold =",threshold,"perplexity =", current_perplexity)
     # while abs(current_perplexity - target_perplexity) > tolerance:
     #     with monit.section(f'threshold={threshold}'):
     #         threshold_sampler = ThresholdSampler(threshold, base_sampler)

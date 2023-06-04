@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import random
 from typing import List
 from utils1 import read_json_file, calculate_perplexity, sample
+import tqdm
 NEWLINE = 198
 
 def sublist_end_index(list1, list2):
@@ -16,7 +17,7 @@ def sublist_end_index(list1, list2):
         return None
 
 
-def main(dataset: List[str], num_samples: int = 10):
+def moving_threshold(dataset: List[str], num_samples: int = 10):
     # Load the model and tokenizer
     with monit.section('Load tokenizer/model'):
         print("Loading tokenizer and model...")
@@ -45,7 +46,6 @@ def main(dataset: List[str], num_samples: int = 10):
 
                 row = row[:40]  # Ensure prompt length is not more than 40
                 sample(model, tokenizer, threshold_sampler, 1, 100, 40, row)
-                # Calculate the perplexity of generated text. You need to implement this function.
                 current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, row, 1, 200, 40)
                 print(f"Current perplexity: {current_perplexity}")
                 avg_perplexity += current_perplexity
@@ -70,9 +70,42 @@ def main(dataset: List[str], num_samples: int = 10):
 
     print(f"Optimal threshold: {optimal_threshold}")
 
+
+def static_threshold(dataset: List[str]):
+    with monit.section('Load tokenizer/model'):
+        print("Loading tokenizer and model...")
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2', do_lower_case=True)
+        model = GPT2LMHeadModel.from_pretrained('gpt2', cache_dir=lab.get_data_path() / 'cache')
+        print("Done loading tokenizer and model...")
+    model.eval()
+    threshold = 0.09
+    base_sampler = TemperatureSampler(1.0)
+    perplexities = []
+    min_diff = float('inf')
+    optimal_threshold = threshold
+    rows = dataset
+    avg_perplexity = 0
+    with monit.section(f'threshold={threshold}'):
+        threshold_sampler = ThresholdSampler(threshold, base_sampler)
+        for row in tqdm.tqdm(rows[:100]):
+            # row = row[:40]  # Ensure prompt length is not more than 40
+            current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, row, 1, 200, 40)
+            perplexities.append(current_perplexity)
+            avg_perplexity += current_perplexity
+
+        avg_perplexity /= len(rows)
+        print(f"Average perplexity: {avg_perplexity}")
+    # Plotting
+    plt.plot(len(rows), perplexities)
+    plt.xlabel('Data Samples')
+    plt.ylabel('Perplexity')
+    plt.title('Perplexity vs. Documents')
+    plt.show()
+
+
 if __name__ == '__main__':
     # Assume your dataset is a list of strings
-    decoded_dataset = read_json_file("decoded_dataset.json")
-    main(decoded_dataset)
+    decoded_dataset = read_json_file("tokenized_dataset.json")
+    static_threshold(decoded_dataset)
 
 

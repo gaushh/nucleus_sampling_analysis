@@ -77,7 +77,7 @@ def read_jsonl():
     with open(file_path, "r") as file:
         for line in file.readlines():
             data = json.loads(line)
-            string = data["string"]
+            string = data["context"]
             strings.append(string)
     return strings
 
