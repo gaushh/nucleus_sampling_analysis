@@ -11,7 +11,7 @@ from threshold_sampler import ThresholdSampler
 import json
 
 def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampler: Sampler, prompt: str,
-                         n_samples: int = 1, n_tokens: int = 100, seq_len: int = 128):
+                         n_samples: int = 1, n_tokens: int = 100, seq_len: int = 128, cut_end = True):
     model.eval()
 
     # Tokenize the `prompt` and make `n_samples` copies of it
@@ -29,6 +29,9 @@ def calculate_perplexity(model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, sampl
             logits = logits[:, -1]
             # Sample from the `logits`
             res = sampler(logits)
+            ## break if eod token reached
+            if 199 == int(res.item()):
+                break
             # Add the sampled token to the data
             data = torch.cat([data, res[:, None]], dim=1)
 

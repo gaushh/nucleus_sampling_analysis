@@ -84,17 +84,18 @@ def static_threshold(dataset: List[str]):
     min_diff = float('inf')
     optimal_threshold = threshold
     rows = dataset
+    # print("length of rows ", len(rows))
     avg_perplexity = 0
-    with monit.section(f'threshold={threshold}'):
-        threshold_sampler = ThresholdSampler(threshold, base_sampler)
-        for row in tqdm.tqdm(rows[:100]):
-            # row = row[:40]  # Ensure prompt length is not more than 40
-            current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, row, 1, 200, 40)
-            perplexities.append(current_perplexity)
-            avg_perplexity += current_perplexity
+    threshold_sampler = ThresholdSampler(threshold, base_sampler)
+    for row in tqdm.tqdm(rows[:100]):
+        # print(row,"//")
+        # row = row[:40]  # Ensure prompt length is not more than 40
+        current_perplexity = calculate_perplexity(model, tokenizer, threshold_sampler, row, 1, 200, 40)
+        perplexities.append(current_perplexity)
+        avg_perplexity += current_perplexity
 
-        avg_perplexity /= len(rows)
-        print(f"Average perplexity: {avg_perplexity}")
+    avg_perplexity /= len(rows)
+    print(f"Average perplexity: {avg_perplexity}")
     # Plotting
     plt.plot(len(rows), perplexities)
     plt.xlabel('Data Samples')
