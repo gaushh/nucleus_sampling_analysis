@@ -105,9 +105,7 @@ def main():
         with monit.section(f'threshold={threshold}'):
             threshold_sampler = ThresholdSampler(threshold, TemperatureSampler(1.))
             sample(model, tokenizer, threshold_sampler, 4, 32, 128, prompt, method='threshold=.01')
-        
-    
 
-#
+
 if __name__ == '__main__':
     main()
