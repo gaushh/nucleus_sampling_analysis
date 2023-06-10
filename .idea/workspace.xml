@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37d2db92-14a9-49a2-a959-2d7265a70e9c" name="Changes" comment="Push tokenized_dataset file">
-      <change afterPath="$PROJECT_DIR$/GraphThresholdvsPerplexity.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dynamic_thresholding.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/flat_distibution.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/papercode_with_threshold_sampling/img.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/peaked_disrtibution.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="37d2db92-14a9-49a2-a959-2d7265a70e9c" name="Changes" comment="Changes for website" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,6 +66,21 @@
       <workItem from="1686095252104" duration="11471000" />
       <workItem from="1686348154828" duration="5940000" />
     </task>
+    <task id="LOCAL-00001" summary="Changes for website">
+      <created>1686367717949</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1686367717950</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Changes for website">
+      <created>1686367776044</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1686367776044</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -95,6 +102,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Changes for website" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes for website" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/nucleus_sampling_analysis$test.coverage" NAME="test Coverage Results" MODIFIED="1684705332063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
