@@ -1,60 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sample HTML File</title>
-  <style>
-    /* CSS styles can be added here */
-  </style>
+    <meta charset="UTF-8">
+    <title>Thresholding as a Decoding Strategy for LLMs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to My Website</h1>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <section>
-      <h2>About Us</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum ultrices urna, at consectetur nunc molestie non. Nunc elementum eu est eget fringilla. Sed nec rutrum ligula, et condimentum sem. Sed viverra mauris sed lacinia volutpat.</p>
-    </section>
-
-    <section>
-      <h2>Our Services</h2>
-      <ul>
-        <li>Web Design</li>
-        <li>Graphic Design</li>
-        <li>Content Writing</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Contact Us</h2>
-      <form>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
-
-        <button type="submit">Send</button>
-      </form>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2023 My Website. All rights reserved.</p>
-  </footer>
+    <div class="container">
+        <h1>Thresholding as a Decoding Strategy for LLMs</h1>
+        <p><strong>Introduction:</strong> Decoding strategies such as Nucleus Sampling and Top-K Sampling have been instrumental in the success of LLMs.</p>
+        <p><strong>Is Nucleus Sampling the best way to decode?</strong> We analyze the generated text from Nucleus Sampling to find some of its shortcomings and propose a new sampling strategy hoping to solve these problems.</p>
+        <p><strong>We also experiment with a dynamic thresholding strategy based on perplexity.</strong></p>
+        <p><strong>Qualitative Analysis for repetition:</strong> Prompt: Sep 4, 2015 - DeeJ</p>
+        <p><strong>Nucleus Sampling:</strong> They're always fun moments to share. They're always fun moments to share.</p>
+        <p><strong>Top-K Sampling:</strong> "While a lot of Destiny has been announced, we've had a lot of speculation about what the Guardian Assault will look like. You can now pre-order your very own Guardianship, and we're going to take a look at some of the features that will be available when it launches...</p>
+        <p><strong>Weaknesses of Nucleus Sampling:</strong> The sampling method can miss out words with significant probability in fat-tailed distributions. This can impact the creativity of the model. Nucleus sampling can end up picking words with very low probabilities in thin-tailed distributions, leading to incoherent text.</p>
+        <p><strong>Our Approach: Thresholding for decoding</strong></p>
+        <p>We evaluate a threshold-based decoding strategy. The key idea is to use a threshold on the probability values of the tokens and sample from only tokens that have probabilities higher than the thresholding probability. The value of this can be a hyperparameter as well as adjusted based on perplexity as we discuss later.</p>
+        <p><strong>How thresholding solves the previous shortcomings:</strong> Thresholding avoids the problems of top-k as the dynamically changing candidate pool is still obtained. Thresholding also addresses the problems of nucleus sampling by being robust to flat and skewed distributions that might cause issues.</p>
+    </div>
 </body>
 </html>
